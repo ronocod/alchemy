@@ -2,7 +2,7 @@ package com.colmcoughlan.colm.alchemy;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.widget.GridView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -11,10 +11,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView textList = (TextView) findViewById(R.id.hello);
+        GridView gridview = (GridView) findViewById(R.id.gridview);
 
-        DataReader dataReader = new DataReader(this, textList);
+        DataReader dataReader = new DataReader(this, gridview);
 
-        dataReader.execute("https://api.likecharity.com/charities/");
+        dataReader.execute("http://colmcoughlan.com:5000");
+        gridview.setAdapter(new ImageAdapter(this));
     }
 }

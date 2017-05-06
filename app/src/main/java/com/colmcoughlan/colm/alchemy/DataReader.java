@@ -113,5 +113,6 @@ public class DataReader extends AsyncTask<String, List<Charity>, List<Charity>> 
 
     protected void onPostExecute(List<Charity> result) {
         Log.w("test", result.toString());
+        t.setAdapter(new ImageAdapter(this.context, result));
     }
 }

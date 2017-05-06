@@ -1,6 +1,8 @@
 package com.colmcoughlan.colm.alchemy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +30,25 @@ public class Charity {
     public String getCategory(){
         return this.category;
     }
-    public Map<String,String> getKeywords(){
-        return this.keywords;
+
+    public List<String>  getKeys(){
+        List<String> keys = new ArrayList<String>(keywords.keySet());
+
+        return keys;
+    }
+
+    public CharSequence[] getKeywords(List<String> keys){
+
+        List<String> keys_values = new ArrayList<String>();
+
+        for(int i = 0; i< keys.size();i++){
+            keys_values.add(keys.get(i) + " - " + keywords.get(keys.get(i)));
+        }
+
+        return keys_values.toArray(new CharSequence[keys_values.size()]);
+    }
+
+    public String getLogoURL(){
+        return this.logo_url;
     }
 }

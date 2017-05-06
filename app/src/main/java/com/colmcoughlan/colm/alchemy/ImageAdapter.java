@@ -5,9 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -28,8 +29,8 @@ public class ImageAdapter extends BaseAdapter {
         return charityList.size();
     }
 
-    public Object getItem(int position) {
-        return null;
+    public Charity getItem(int position) {
+        return charityList.get(position);
     }
 
     public long getItemId(int position) {
@@ -46,12 +47,20 @@ public class ImageAdapter extends BaseAdapter {
 
             gridView = new View(mContext);
             gridView = inflater.inflate(R.layout.gridview_layout, null);
-            TextView textView = (TextView) gridView.findViewById(R.id.gridview_text);
-            ImageView imageView = (ImageView) gridView.findViewById(R.id.gridview_image);
-            textView.setText("Test");
-            imageView.setImageResource(mThumbIds[position]);
         } else {
             gridView = (View) convertView;
+        }
+
+        TextView textView = (TextView) gridView.findViewById(R.id.gridview_text);
+        ImageView imageView = (ImageView) gridView.findViewById(R.id.gridview_image);
+        textView.setText(charityList.get(position).getName());
+        String logo_url = charityList.get(position).getLogoURL();
+        //imageView.setImageResource(mThumbIds[0]);
+        if ( logo_url != ""){
+            Picasso.with(this.mContext).load("http://i.imgur.com/DvpvklR.png").into(imageView);
+        }
+        else{
+            Picasso.with(this.mContext).load(mThumbIds[0]).into(imageView);
         }
 
         return gridView;

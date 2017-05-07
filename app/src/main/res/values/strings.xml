@@ -2,6 +2,25 @@
     <string name="app_name">Alchemy</string>
     <string name="title_activity_settings">Settings</string>
 
+    <string-array name="categories_array">
+        <item>All</item>
+        <item>Animals</item>
+        <item>Children</item>
+        <item>Community</item>
+        <item>Developing World</item>
+        <item>Disability</item>
+        <item>Elderly</item>
+        <item>Environment</item>
+        <item>Homelessness</item>
+        <item>Illness</item>
+        <item>Mental Health</item>
+        <item>Religion</item>
+    </string-array>
+
+    <string name="search_title">Search</string>
+    <string name="about_title">About</string>
+
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

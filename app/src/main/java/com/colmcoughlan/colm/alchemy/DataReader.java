@@ -78,6 +78,8 @@ public class DataReader extends AsyncTask<String, List<Charity>, List<Charity>> 
                     //Log.d("Response: ", "> " + key);
                     String category = ((JSONObject) charities.get(key)).getString("category"); // category
                     String link = ((JSONObject) charities.get(key)).getString("category"); // logo link
+                    String number = ((JSONObject) charities.get(key)).getString("number"); // lphone number
+
 
                     Map<String,String> donation_keys_strings = new HashMap<String, String>();
                     JSONObject donation_list = ((JSONObject) charities.get(key)).getJSONObject("donation_list");
@@ -87,7 +89,7 @@ public class DataReader extends AsyncTask<String, List<Charity>, List<Charity>> 
                         donation_keys_strings.put(donation_key, donation_list.getString(donation_key));
                     }
 
-                    Charity newCharity = new Charity(key, category, link, donation_keys_strings);
+                    Charity newCharity = new Charity(key, category, link, number, donation_keys_strings);
 
                     charityList.add(newCharity);
                 }

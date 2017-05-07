@@ -1,24 +1,74 @@
 package com.colmcoughlan.colm.alchemy;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.util.Log;
 import android.telephony.SmsManager;
+import android.widget.SearchView;
+import android.widget.Spinner;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    static String category = "All";
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+/*
+        SearchManager searchManager = (SearchManager)
+                getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchMenuItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+
+        searchView.setSearchableInfo(searchManager.
+                getSearchableInfo(getComponentName()));
+*/
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        Spinner spinner = (Spinner) findViewById(R.id.category_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.categories_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+/*
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                              @Override
+                                              public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                category = (String) parent.getItemAtPosition(position);
+                                                  gridView.;
+                                              }
+
+                                              @Override
+                                              public void onNothingSelected(AdapterView<?> parent) {
+                                                category = "All";
+                                              }
+                                          }
+        );
+*/
 
         final GridView gridView = (GridView) findViewById(R.id.gridview);
 
@@ -40,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.setItems( charity.getKeywords(keywords) , new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.w("choice:", keywords.get(which));
-                                sendSms("50300", keywords.get(which));
+                                sendSms(charity.getNumber(), keywords.get(which));
                             }
                         });
                 builder.create().show();

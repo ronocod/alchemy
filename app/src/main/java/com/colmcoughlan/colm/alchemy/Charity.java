@@ -13,13 +13,15 @@ public class Charity {
     private String name;
     private String category;
     private String logo_url;
+    private String number;
 
     private Map<String,String> keywords = new HashMap<>();
 
-    public Charity(String name, String category, String logo_url, Map<String,String> keywords) {
+    public Charity(String name, String category, String logo_url, String number, Map<String,String> keywords) {
         this.name = name;
         this.category = category;
         this.logo_url = logo_url;
+        this.number = number;
         this.keywords = keywords;
     }
 
@@ -51,4 +53,9 @@ public class Charity {
     public String getLogoURL(){
         return this.logo_url;
     }
+
+    public String getNumber(){
+        return this.number;
+    }
+
 }

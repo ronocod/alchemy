@@ -77,7 +77,7 @@ public class DataReader extends AsyncTask<String, List<Charity>, List<Charity>> 
                 if ( charities.get(key) instanceof JSONObject ) {
                     //Log.d("Response: ", "> " + key);
                     String category = ((JSONObject) charities.get(key)).getString("category"); // category
-                    String link = ((JSONObject) charities.get(key)).getString("category"); // logo link
+                    String link = ((JSONObject) charities.get(key)).getString("logo"); // logo link
                     String number = ((JSONObject) charities.get(key)).getString("number"); // lphone number
 
 

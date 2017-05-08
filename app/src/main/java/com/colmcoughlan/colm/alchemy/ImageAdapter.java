@@ -57,7 +57,7 @@ public class ImageAdapter extends BaseAdapter {
         String logo_url = charityList.get(position).getLogoURL();
         //imageView.setImageResource(mThumbIds[0]);
         if ( logo_url != ""){
-            Picasso.with(this.mContext).load("http://i.imgur.com/DvpvklR.png").into(imageView);
+            Picasso.with(this.mContext).load(logo_url).into(imageView);
         }
         else{
             Picasso.with(this.mContext).load(mThumbIds[0]).into(imageView);

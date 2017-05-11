@@ -1,6 +1,7 @@
 package com.colmcoughlan.colm.alchemy;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,8 @@ public class ImageAdapter extends BaseAdapter {
         textView.setText(charityList.get(position).getName());
         String logo_url = charityList.get(position).getLogoURL();
         //imageView.setImageResource(mThumbIds[0]);
-        if ( logo_url != ""){
+        if ( !logo_url.isEmpty()){
+            Log.d("test","test");
             Picasso.with(this.mContext).load(logo_url).into(imageView);
         }
         else{

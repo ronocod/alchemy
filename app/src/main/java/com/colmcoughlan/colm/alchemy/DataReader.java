@@ -3,6 +3,7 @@ package com.colmcoughlan.colm.alchemy;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Adapter;
 import android.widget.GridView;
 
 import org.json.JSONArray;

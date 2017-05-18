@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <item android:id="@+id/search"
         android:title="@string/search_title"
-        android:showAsAction="collapseActionView|ifRoom"
-        android:actionViewClass="android.widget.SearchView" />
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
 
     <item android:id="@+id/about"
         android:title="@string/about_title"
-        android:showAsAction="collapseActionView|ifRoom"
-        android:actionViewClass="android.widget.TextView" />
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.widget.TextView" />
 
 
 </menu>

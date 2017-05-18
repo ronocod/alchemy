@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,18 +22,21 @@ import java.util.List;
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private List<Charity> charityList;
+    private List<Charity> filteredList;
+    private CharityFilter charityFilter;
 
     public ImageAdapter(Context c, List<Charity> charityList) {
         mContext = c;
         this.charityList = charityList;
+        this.filteredList = charityList;
     }
 
     public int getCount() {
-        return charityList.size();
+        return filteredList.size();
     }
 
     public Charity getItem(int position) {
-        return charityList.get(position);
+        return filteredList.get(position);
     }
 
     public long getItemId(int position) {
@@ -54,11 +59,10 @@ public class ImageAdapter extends BaseAdapter {
 
         TextView textView = (TextView) gridView.findViewById(R.id.gridview_text);
         ImageView imageView = (ImageView) gridView.findViewById(R.id.gridview_image);
-        textView.setText(charityList.get(position).getName());
-        String logo_url = charityList.get(position).getLogoURL();
+        textView.setText(filteredList.get(position).getName());
+        String logo_url = filteredList.get(position).getLogoURL();
         //imageView.setImageResource(mThumbIds[0]);
         if ( !logo_url.isEmpty()){
-            Log.d("test","test");
             Picasso.with(this.mContext).load(logo_url).into(imageView);
         }
         else{
@@ -72,4 +76,54 @@ public class ImageAdapter extends BaseAdapter {
     private Integer[] mThumbIds = {
             R.drawable.alchemy
     };
+
+    public Filter getFilter() {
+        if (charityFilter == null) {
+            charityFilter = new CharityFilter();
+        }
+
+        return charityFilter;
+    }
+
+    private class CharityFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint){
+            FilterResults filterResults = new FilterResults();
+
+            Log.d("Filtering: ", "> " + constraint);
+
+            if (constraint!=null && constraint.length()>0) {
+                ArrayList<Charity> tempList = new ArrayList<Charity>();
+
+                // search content in friend list
+                Log.d("Seaching: ", "> Begin ");
+                for (Charity charity : charityList) {
+                    if (charity.getName().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        Log.d("Found: ", "> " + charity.getName());
+                        tempList.add(charity);
+                    }
+                }
+
+                filterResults.count = tempList.size();
+                filterResults.values = tempList;
+            } else {
+                filterResults.count = charityList.size();
+                filterResults.values = charityList;
+            }
+
+            Log.d("Final: ", "> " + filterResults.values.toString());
+
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredList = (List<Charity>) results.values;
+            Log.d("published: ", "> " + filteredList.get(0).getName());
+            Log.d("published size: ", "> " + filteredList.size());
+            notifyDataSetChanged();
+        }
+    }
+
 }

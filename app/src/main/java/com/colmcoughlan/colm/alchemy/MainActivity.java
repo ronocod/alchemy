@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,20 +17,20 @@ import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.util.Log;
 import android.telephony.SmsManager;
-import android.widget.SearchView;
 import android.widget.Spinner;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     static String category = "All";
+    GridView gridView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-/*
+
         SearchManager searchManager = (SearchManager)
                 getSystemService(Context.SEARCH_SERVICE);
         MenuItem searchMenuItem = menu.findItem(R.id.search);
@@ -37,7 +38,36 @@ public class MainActivity extends AppCompatActivity {
 
         searchView.setSearchableInfo(searchManager.
                 getSearchableInfo(getComponentName()));
-*/
+
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Log.d("Query submit: ", "> " + query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+        Log.d("Testchange: ", "> " + newText);
+
+
+        ImageAdapter imageAdapter = (ImageAdapter) gridView.getAdapter();
+        imageAdapter.getFilter().filter(newText);
+
+        // use to enable search view popup text
+//        if (TextUtils.isEmpty(newText)) {
+//            friendListView.clearTextFilter();
+//        }
+//        else {
+//            friendListView.setFilterText(newText.toString());
+//        }
+
         return true;
     }
 
@@ -70,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         );
 */
 
-        final GridView gridView = (GridView) findViewById(R.id.gridview);
+        gridView = (GridView) findViewById(R.id.gridview);
 
         DataReader dataReader = new DataReader(this, gridView);
 

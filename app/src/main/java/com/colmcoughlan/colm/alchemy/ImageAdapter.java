@@ -88,18 +88,38 @@ public class ImageAdapter extends BaseAdapter {
     private class CharityFilter extends Filter {
 
         @Override
-        protected FilterResults performFiltering(CharSequence constraint){
+        protected FilterResults performFiltering(CharSequence constraintCategory){
             FilterResults filterResults = new FilterResults();
+            String[] parts = constraintCategory.toString().split(":cat:");
+            CharSequence constraint = parts[0];
+            CharSequence category = parts[1];
+            boolean haveConstraint = false;
+            boolean matchesConstraint = false;
+            boolean matchesCategory = false;
 
             Log.d("Filtering: ", "> " + constraint);
-
-            if (constraint!=null && constraint.length()>0) {
+            if (constraint!=null && constraint.length()>0){
+                haveConstraint = true;
+            }
+            if (haveConstraint || !category.equals("All")) {
                 ArrayList<Charity> tempList = new ArrayList<Charity>();
 
                 // search content in friend list
                 Log.d("Seaching: ", "> Begin ");
                 for (Charity charity : charityList) {
-                    if (charity.getName().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                    if(haveConstraint){
+                        matchesConstraint = (charity.getName().toLowerCase().contains(constraint.toString().toLowerCase()));
+                    }else{
+                        matchesConstraint = true;
+                    }
+
+                    if(category.equals("All")){
+                        matchesCategory = true;
+                    }else{
+                        matchesCategory = (charity.getCategory().equals(category.toString()));
+                    }
+
+                    if  (matchesConstraint && matchesCategory) {
                         Log.d("Found: ", "> " + charity.getName());
                         tempList.add(charity);
                     }

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Alchemy.iml" filepath="$PROJECT_DIR$/Alchemy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/alchemy.iml" filepath="$PROJECT_DIR$/alchemy.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

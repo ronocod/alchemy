@@ -24,7 +24,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     static String category = "All";
-    GridView gridView;
+    GridView gridView = null;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,10 +55,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onQueryTextChange(String newText) {
 
         Log.d("Testchange: ", "> " + newText);
+        Log.d("Testchangecat: ", "> " + category);
 
 
         ImageAdapter imageAdapter = (ImageAdapter) gridView.getAdapter();
-        imageAdapter.getFilter().filter(newText);
+        imageAdapter.getFilter().filter(newText+":cat:"+category);
 
         // use to enable search view popup text
 //        if (TextUtils.isEmpty(newText)) {
@@ -84,12 +85,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
-/*
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                               @Override
                                               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                                 category = (String) parent.getItemAtPosition(position);
-                                                  gridView.;
+                                                if(gridView != null){
+                                                    ImageAdapter imageAdapter = (ImageAdapter) gridView.getAdapter();
+                                                    imageAdapter.getFilter().filter(""+":cat:"+category);
+                                                }
                                               }
 
                                               @Override
@@ -98,13 +102,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                               }
                                           }
         );
-*/
 
         gridView = (GridView) findViewById(R.id.gridview);
 
         DataReader dataReader = new DataReader(this, gridView);
 
-        dataReader.execute("http://colmcoughlan.com:5000");
+        dataReader.execute("http://colmcoughlan.com:5000/gci");
 
         gridView.setOnItemClickListener(new OnItemClickListener() {
             @Override

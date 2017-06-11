@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
+        spinner.setSelection(0, false); // need this to stop OnItemSelectedListener being called at start
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                               @Override
                                               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

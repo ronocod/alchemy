@@ -13,9 +13,9 @@
 
     <GridView
         android:id="@+id/gridview"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:columnWidth="150dp"
+        android:columnWidth="300dp"
         android:gravity="center"
         android:numColumns="auto_fit" />
 </LinearLayout>

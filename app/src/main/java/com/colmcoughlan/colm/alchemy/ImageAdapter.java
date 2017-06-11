@@ -140,7 +140,6 @@ public class ImageAdapter extends BaseAdapter {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredList = (List<Charity>) results.values;
-            Log.d("published: ", "> " + filteredList.get(0).getName());
             Log.d("published size: ", "> " + filteredList.size());
             notifyDataSetChanged();
         }

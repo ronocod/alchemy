@@ -1,6 +1,7 @@
 package com.colmcoughlan.colm.alchemy;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,12 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             gridView = (View) convertView;
         }
+
+        if (position % 2 == 0)
+            gridView.setBackgroundColor(Color.parseColor("#e0e0e0"));
+        else
+            gridView.setBackgroundColor(Color.parseColor("#eeeeee"));
+
 
         TextView textView = (TextView) gridView.findViewById(R.id.gridview_text);
         ImageView imageView = (ImageView) gridView.findViewById(R.id.gridview_image);

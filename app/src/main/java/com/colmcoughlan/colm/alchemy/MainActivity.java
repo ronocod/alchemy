@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -43,6 +44,23 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         searchView.setOnQueryTextListener(this);
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.about:
+                Intent i = new Intent(this, SettingsActivity.class);
+                startActivity(i);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+        this.invalidateOptionsMenu(); //refresh the menu on returning
     }
 
     @Override
@@ -109,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         DataReader dataReader = new DataReader(this, gridView);
 
-        dataReader.execute("http://colmcoughlan.com:5000/gci");
+        dataReader.execute("http://colmcoughlan.com/gci");
 
         gridView.setOnItemClickListener(new OnItemClickListener() {
             @Override

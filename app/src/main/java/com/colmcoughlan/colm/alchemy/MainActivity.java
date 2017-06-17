@@ -58,22 +58,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     @Override
-    public void onResume() {
-        super.onResume();  // Always call the superclass method first
-        this.invalidateOptionsMenu(); //refresh the menu on returning
-    }
-
-    @Override
     public boolean onQueryTextSubmit(String query) {
-        Log.d("Query submit: ", "> " + query);
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-
-        Log.d("Testchange: ", "> " + newText);
-        Log.d("Testchangecat: ", "> " + category);
 
 
         ImageAdapter imageAdapter = (ImageAdapter) gridView.getAdapter();
@@ -127,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         DataReader dataReader = new DataReader(this, gridView);
 
-        dataReader.execute("http://colmcoughlan.com/gci");
+        dataReader.execute(getString(R.string.server_url));
 
         gridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -135,14 +125,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     int position, long id) {
                 final Charity charity = (Charity) gridView.getItemAtPosition(position);
                 final List<String> keywords = charity.getKeys();
-                Log.w("touch", charity.getName());
-                // DO something
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Choose a keyword");
                 builder.setItems( charity.getKeywords(keywords) , new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.w("choice:", keywords.get(which));
                                 sendSms(charity.getNumber(), keywords.get(which));
                             }
                         });

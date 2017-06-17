@@ -2,6 +2,7 @@ package com.colmcoughlan.colm.alchemy;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,15 +66,28 @@ public class ImageAdapter extends BaseAdapter {
 
 
         TextView textView = (TextView) gridView.findViewById(R.id.gridview_text);
-        ImageView imageView = (ImageView) gridView.findViewById(R.id.gridview_image);
+        final ImageView imageView = (ImageView) gridView.findViewById(R.id.gridview_image);
         textView.setText(filteredList.get(position).getName());
         String logo_url = filteredList.get(position).getLogoURL();
         //imageView.setImageResource(mThumbIds[0]);
+
+        Picasso.Builder builder = new Picasso.Builder(this.mContext);
+        builder.listener(new Picasso.Listener()
+        {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+            {
+                picasso.load(mThumbIds[0]).into(imageView); // on failure just load the default image
+            }
+        });
+
+        Picasso picasso= builder.build();
+
         if ( !logo_url.isEmpty()){
-            Picasso.with(this.mContext).load(logo_url).into(imageView);
+            picasso.load(logo_url).into(imageView);
         }
         else{
-            Picasso.with(this.mContext).load(mThumbIds[0]).into(imageView);
+            picasso.load(mThumbIds[0]).into(imageView);
         }
 
         return gridView;
@@ -104,15 +118,12 @@ public class ImageAdapter extends BaseAdapter {
             boolean matchesConstraint = false;
             boolean matchesCategory = false;
 
-            Log.d("Filtering: ", "> " + constraint);
             if (constraint!=null && constraint.length()>0){
                 haveConstraint = true;
             }
             if (haveConstraint || !category.equals("All")) {
                 ArrayList<Charity> tempList = new ArrayList<Charity>();
 
-                // search content in friend list
-                Log.d("Seaching: ", "> Begin ");
                 for (Charity charity : charityList) {
                     if(haveConstraint){
                         matchesConstraint = (charity.getName().toLowerCase().contains(constraint.toString().toLowerCase()));
@@ -127,7 +138,6 @@ public class ImageAdapter extends BaseAdapter {
                     }
 
                     if  (matchesConstraint && matchesCategory) {
-                        Log.d("Found: ", "> " + charity.getName());
                         tempList.add(charity);
                     }
                 }
@@ -139,7 +149,6 @@ public class ImageAdapter extends BaseAdapter {
                 filterResults.values = charityList;
             }
 
-            Log.d("Final: ", "> " + filterResults.values.toString());
 
             return filterResults;
         }
@@ -147,7 +156,6 @@ public class ImageAdapter extends BaseAdapter {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredList = (List<Charity>) results.values;
-            Log.d("published size: ", "> " + filteredList.size());
             notifyDataSetChanged();
         }
     }

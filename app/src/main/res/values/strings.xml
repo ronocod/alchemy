@@ -20,11 +20,20 @@
     <string name="search_title">Search</string>
     <string name="about_title">About</string>
 
+    <string name="confirm_yes">Yes</string>
+    <string name="confirm_cancel">Cancel</string>
+
     <string name="server_url">"http://colmcoughlan.com/gci"</string>
+    <string name="pref_previously_started">notFirstRun</string>
+    <string name="welcome_text">Welcome to Alchemy. This app helps you discover and donate to charities in your country. Only Ireland is supported for now - but hopefully more countries are on the way.\n\n Tap a charity to see the donation options, and tap again to make a donation using your phone credit. You will get a message from the donation handling company confirming your donation was successful.</string>
+    <string name="welcome_dismiss">Sounds good</string>
 
     <string name="about_summary">This is an app which collects charity donation phone numbers and presents them in a nice way to help you find causes you\'re interested in.\n
         The charity information is sourced from <a href="https://api.likecharity.com/charities/">https://api.likecharity.com/charities/</a> . All donations are processed by <a href="https://www.likecharity.com">LikeCharity</a>, who have no association whatsoever with this app.\n
         Currently this app is restricted to use in Ireland, but hopefully other APIs will be added soon.
+    </string>
+
+    <string name="disclaimer">Donations made through this app come out of your credit. Alchemy does not handle any of your money - it is sent straight to the listed donation number for the charity.
     </string>
 
     <string name="supported_countries_title">Country</string>

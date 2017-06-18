@@ -5,6 +5,11 @@
         android:selectable="false"
         android:title="About"
         android:summary="@string/about_summary"/>
+    <Preference
+        android:key="pref_static_field_key"
+        android:selectable="false"
+        android:title="Disclaimer"
+        android:summary="@string/disclaimer"/>
     <ListPreference
         android:title="@string/supported_countries_title"
         android:defaultValue="1"

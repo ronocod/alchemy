@@ -39,6 +39,10 @@ public class Charity {
         return keys;
     }
 
+    public String getCost(String key) {
+        return keywords.get(key);
+    }
+
     public CharSequence[] getKeywords(List<String> keys){
 
         List<String> keys_values = new ArrayList<String>();

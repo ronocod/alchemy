@@ -1,12 +1,17 @@
 package com.colmcoughlan.colm.alchemy;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -29,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     static String category = "All";
     GridView gridView = null;
+    Activity mainActivity = this;
 
     // add the search and about sections to the menu. Hook up the search option to the correct searchview
 
@@ -141,6 +147,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         if(firstRun()){
             showHelp();
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 0);
+        }
+        else{
+            // whether it's first run or not, we need SMS permissions (not granted by default)
+            if (ContextCompat.checkSelfPermission(this,Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 0);
+            }
         }
 
         // set up click listener for selection of charities
@@ -190,6 +203,37 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    // if we get permissions for SMS - great, otherwise - raise an error and quit the app
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 0: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Warning: This app needs SMS permissions!");
+                    builder.setMessage(R.string.sms_text);
+                    builder.setPositiveButton(R.string.welcome_dismiss, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            mainActivity.finish();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+        }
     }
 
     // check with the user if they want to confirm a donation

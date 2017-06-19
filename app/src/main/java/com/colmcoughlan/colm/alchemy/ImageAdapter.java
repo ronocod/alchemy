@@ -12,6 +12,7 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -69,7 +70,6 @@ public class ImageAdapter extends BaseAdapter {
         final ImageView imageView = (ImageView) gridView.findViewById(R.id.gridview_image);
         textView.setText(filteredList.get(position).getName());
         String logo_url = filteredList.get(position).getLogoURL();
-        //imageView.setImageResource(mThumbIds[0]);
 
         Picasso.Builder builder = new Picasso.Builder(this.mContext);
         builder.listener(new Picasso.Listener()
@@ -77,26 +77,21 @@ public class ImageAdapter extends BaseAdapter {
             @Override
             public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
             {
-                picasso.load(mThumbIds[0]).into(imageView); // on failure just load the default image
+                picasso.load(R.drawable.alchemy).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView); // on failure just load the default image
             }
         });
 
         Picasso picasso= builder.build();
 
         if ( !logo_url.isEmpty()){
-            picasso.load(logo_url).into(imageView);
+            picasso.load(logo_url).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
         }
         else{
-            picasso.load(mThumbIds[0]).into(imageView);
+            picasso.load(R.drawable.alchemy).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
         }
 
         return gridView;
     }
-
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.alchemy
-    };
 
     public Filter getFilter() {
         if (charityFilter == null) {

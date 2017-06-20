@@ -146,8 +146,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         // if this is the first run, display an information box
 
         if(firstRun()){
-            showHelp();
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 0);
+            showHelp(this);
         }
         else{
             // whether it's first run or not, we need SMS permissions (not granted by default)
@@ -192,13 +191,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     // show help if needed
 
-    private void showHelp(){
+    private void showHelp(final Activity activity){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Welcome!");
         builder.setMessage(R.string.welcome_text);
         builder.setPositiveButton(R.string.welcome_dismiss, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
+            }
+        });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, 0);
             }
         });
         AlertDialog dialog = builder.create();

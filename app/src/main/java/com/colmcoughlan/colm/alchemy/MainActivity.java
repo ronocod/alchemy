@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final Charity charity = (Charity) gridView.getItemAtPosition(position);
-                int duration = Toast.LENGTH_SHORT;
+                int duration = Toast.LENGTH_LONG;
                 Toast toast = Toast.makeText(getApplicationContext(), charity.getDescription(), duration);
                 toast.show();
                 return true; // cancel the single click with true

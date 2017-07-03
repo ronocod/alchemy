@@ -1,12 +1,18 @@
 package com.colmcoughlan.colm.alchemy;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -21,6 +27,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.util.Log;
 import android.telephony.SmsManager;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,26 +36,41 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     static String category = "All";
     GridView gridView = null;
+    Activity mainActivity = this;
+    Boolean rebuildMenu = true;
 
     // add the search and about sections to the menu. Hook up the search option to the correct searchview
 
+
+    // this is actually the same as on create, but called after resume to make sure menu is ok
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+    public boolean onPrepareOptionsMenu(Menu menu){
+        if(rebuildMenu){
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu, menu);
 
-        SearchManager searchManager = (SearchManager)
-                getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchMenuItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+            SearchManager searchManager = (SearchManager)
+                    getSystemService(Context.SEARCH_SERVICE);
+            MenuItem searchMenuItem = menu.findItem(R.id.search);
+            SearchView searchView = (SearchView) searchMenuItem.getActionView();
 
-        searchView.setSearchableInfo(searchManager.
-                getSearchableInfo(getComponentName()));
+            searchView.setSearchableInfo(searchManager.
+                    getSearchableInfo(getComponentName()));
 
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setOnQueryTextListener(this);
+            searchView.setSubmitButtonEnabled(true);
+            searchView.setOnQueryTextListener(this);
+            rebuildMenu = false;
+        }
 
         return true;
+    };
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        rebuildMenu = true;
+        invalidateOptionsMenu();
     }
 
     // add ability to select about activity
@@ -140,7 +162,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         // if this is the first run, display an information box
 
         if(firstRun()){
-            showHelp();
+            showHelp(this);
+        }
+        else{
+            // whether it's first run or not, we need SMS permissions (not granted by default)
+            if (ContextCompat.checkSelfPermission(this,Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 0);
+            }
         }
 
         // set up click listener for selection of charities
@@ -162,6 +190,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 builder.create().show();
             }
         });
+
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final Charity charity = (Charity) gridView.getItemAtPosition(position);
+                int duration = Toast.LENGTH_LONG;
+                Toast toast = Toast.makeText(getApplicationContext(), charity.getDescription(), duration);
+                toast.show();
+                return true; // cancel the single click with true
+            }
+        });
     }
 
     // is this the first run?
@@ -179,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     // show help if needed
 
-    private void showHelp(){
+    private void showHelp(final Activity activity){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Welcome!");
         builder.setMessage(R.string.welcome_text);
@@ -188,8 +227,45 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 dialog.dismiss();
             }
         });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, 0);
+            }
+        });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    // if we get permissions for SMS - great, otherwise - raise an error and quit the app
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 0: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Warning: This app needs SMS permissions!");
+                    builder.setMessage(R.string.sms_text);
+                    builder.setPositiveButton(R.string.welcome_dismiss, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            mainActivity.finish();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+        }
     }
 
     // check with the user if they want to confirm a donation
@@ -201,6 +277,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             public void onClick(DialogInterface dialog, int id) {
                 sendSms(charity.getNumber(), keyword);
                 dialog.dismiss();
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(getApplicationContext(), R.string.toast_confirmation, duration);
+                toast.show();
             }
         });
         builder.setNegativeButton(R.string.confirm_cancel, new DialogInterface.OnClickListener() {

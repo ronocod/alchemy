@@ -2,6 +2,7 @@ package com.colmcoughlan.colm.alchemy;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,9 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,6 +30,12 @@ public class ImageAdapter extends BaseAdapter {
     private List<Charity> charityList;
     private List<Charity> filteredList;
     private CharityFilter charityFilter;
+
+    static class ViewHolder
+    {
+        TextView textView;
+        ImageView imageView;
+    }
 
     public ImageAdapter(Context c, List<Charity> charityList) {
         mContext = c;
@@ -47,56 +57,40 @@ public class ImageAdapter extends BaseAdapter {
 
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
-        View gridView;
+        ViewHolder holder;
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
-
-            gridView = new View(mContext);
-            gridView = inflater.inflate(R.layout.gridview_layout, null);
+            convertView = inflater.inflate(R.layout.gridview_layout, null);
+            holder = new ViewHolder();
+            holder.textView = (TextView) convertView.findViewById(R.id.gridview_text);
+            holder.imageView = (ImageView) convertView.findViewById(R.id.gridview_image);
+            convertView.setTag(holder);
         } else {
-            gridView = (View) convertView;
+            holder = (ViewHolder) convertView.getTag();
+            Picasso.with(mContext).cancelRequest(holder.imageView);
         }
 
-        if (position % 2 == 0)
-            gridView.setBackgroundColor(Color.parseColor("#e0e0e0"));
-        else
-            gridView.setBackgroundColor(Color.parseColor("#eeeeee"));
+        if (position % 2 == 0){
+            convertView.setBackgroundColor(Color.parseColor("#e0e0e0"));
+        }
+        else {
+            convertView.setBackgroundColor(Color.parseColor("#eeeeee"));
+        }
 
-
-        TextView textView = (TextView) gridView.findViewById(R.id.gridview_text);
-        final ImageView imageView = (ImageView) gridView.findViewById(R.id.gridview_image);
-        textView.setText(filteredList.get(position).getName());
+        holder.textView.setText(filteredList.get(position).getName());
         String logo_url = filteredList.get(position).getLogoURL();
-        //imageView.setImageResource(mThumbIds[0]);
-
-        Picasso.Builder builder = new Picasso.Builder(this.mContext);
-        builder.listener(new Picasso.Listener()
-        {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-            {
-                picasso.load(mThumbIds[0]).into(imageView); // on failure just load the default image
-            }
-        });
-
-        Picasso picasso= builder.build();
-
-        if ( !logo_url.isEmpty()){
-            picasso.load(logo_url).into(imageView);
+        try{
+            Picasso.with(mContext).load(logo_url).placeholder(R.drawable.alchemy).into(holder.imageView);
         }
-        else{
-            picasso.load(mThumbIds[0]).into(imageView);
+        catch (Throwable e){
+            Picasso.with(mContext).load(R.drawable.alchemy).into(holder.imageView);
         }
 
-        return gridView;
+        return convertView;
     }
 
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.alchemy
-    };
 
     public Filter getFilter() {
         if (charityFilter == null) {

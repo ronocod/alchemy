@@ -78,19 +78,20 @@ public class DataReader extends AsyncTask<String, List<Charity>, List<Charity>> 
                 if ( charities.get(key) instanceof JSONObject ) {
                     //Log.d("Response: ", "> " + key);
                     String category = ((JSONObject) charities.get(key)).getString("category"); // category
-                    String link = ((JSONObject) charities.get(key)).getString("logo"); // logo link
+                    String link = ((JSONObject) charities.get(key)).getString("logo_url"); // logo link
+                    String description = ((JSONObject) charities.get(key)).getString("description"); // description link
                     String number = ((JSONObject) charities.get(key)).getString("number"); // lphone number
 
 
                     Map<String,String> donation_keys_strings = new HashMap<String, String>();
-                    JSONObject donation_list = ((JSONObject) charities.get(key)).getJSONObject("donation_list");
+                    JSONObject donation_list = new JSONObject(((JSONObject) charities.get(key)).getString("donation_options"));
                     Iterator<?> donation_keys = donation_list.keys();
                     while( donation_keys.hasNext() ) {
                         String donation_key = (String)donation_keys.next(); // donation keys and values
                         donation_keys_strings.put(donation_key, donation_list.getString(donation_key));
                     }
 
-                    Charity newCharity = new Charity(key, category, link, number, donation_keys_strings);
+                    Charity newCharity = new Charity(key, category, description, link, number, donation_keys_strings);
 
                     charityList.add(newCharity);
                 }

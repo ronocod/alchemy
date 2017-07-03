@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -26,6 +27,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.util.Log;
 import android.telephony.SmsManager;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,26 +37,40 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     static String category = "All";
     GridView gridView = null;
     Activity mainActivity = this;
+    Boolean rebuildMenu = true;
 
     // add the search and about sections to the menu. Hook up the search option to the correct searchview
 
+
+    // this is actually the same as on create, but called after resume to make sure menu is ok
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+    public boolean onPrepareOptionsMenu(Menu menu){
+        if(rebuildMenu){
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu, menu);
 
-        SearchManager searchManager = (SearchManager)
-                getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchMenuItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+            SearchManager searchManager = (SearchManager)
+                    getSystemService(Context.SEARCH_SERVICE);
+            MenuItem searchMenuItem = menu.findItem(R.id.search);
+            SearchView searchView = (SearchView) searchMenuItem.getActionView();
 
-        searchView.setSearchableInfo(searchManager.
-                getSearchableInfo(getComponentName()));
+            searchView.setSearchableInfo(searchManager.
+                    getSearchableInfo(getComponentName()));
 
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setOnQueryTextListener(this);
+            searchView.setSubmitButtonEnabled(true);
+            searchView.setOnQueryTextListener(this);
+            rebuildMenu = false;
+        }
 
         return true;
+    };
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        rebuildMenu = true;
+        invalidateOptionsMenu();
     }
 
     // add ability to select about activity
@@ -174,6 +190,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 builder.create().show();
             }
         });
+
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final Charity charity = (Charity) gridView.getItemAtPosition(position);
+                int duration = Toast.LENGTH_LONG;
+                Toast toast = Toast.makeText(getApplicationContext(), charity.getDescription(), duration);
+                toast.show();
+                return true; // cancel the single click with true
+            }
+        });
     }
 
     // is this the first run?
@@ -250,6 +277,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             public void onClick(DialogInterface dialog, int id) {
                 sendSms(charity.getNumber(), keyword);
                 dialog.dismiss();
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(getApplicationContext(), R.string.toast_confirmation, duration);
+                toast.show();
             }
         });
         builder.setNegativeButton(R.string.confirm_cancel, new DialogInterface.OnClickListener() {

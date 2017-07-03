@@ -23,7 +23,9 @@
     <string name="confirm_yes">Yes</string>
     <string name="confirm_cancel">Cancel</string>
 
-    <string name="server_url">"http://colmcoughlan.com/gci"</string>
+    <string name="toast_confirmation">Donation sent. A confirmation SMS should arrive shortly.</string>
+
+    <string name="server_url">"http://colmcoughlan.com:5000/gci"</string>
     <string name="pref_previously_started">notFirstRun</string>
     <string name="sms_text">Alchemy needs SMS permissons to donate to charities. As you have denied it SMS permissions, Alchemy will now close - if you open it again you can change your mind.</string>
     <string name="welcome_text">

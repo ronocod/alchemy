@@ -23,6 +23,7 @@
     <string name="confirm_yes">Yes</string>
     <string name="confirm_cancel">Cancel</string>
 
+    <string name="likecharity_tcs">"Texts cost €2, €4 or €6. Charities receive a minimum of €1.63 of €2, €3.25 of €4 and €4.88 of €6. Service Provider: LIKECHARITY. Helpline: 0766805278"</string>
     <string name="toast_confirmation">Donation sent. A confirmation SMS should arrive shortly.</string>
 
     <string name="server_url">"http://colmcoughlan.com/gci"</string>
@@ -31,15 +32,16 @@
     <string name="welcome_text">
         Welcome to Alchemy, an app which will help you discover and donate to charities in Ireland.
         \n\nTap a charity to see the donation options, and tap again to make a donation via text using your phone credit. You will get a message from the donation handling company confirming your donation was successful.
+        \n\nYou can long press on a charity to find see information on it.
         \n\nYou will now be asked to allow Alchemy access to your SMS messages - this is only used when you choose to make a donation.
     </string>
-    <string name="welcome_dismiss">Sounds good</string>
+    <string name="welcome_dismiss">Ok</string>
 
     <string name="about_summary">
         Alchemy collects charity donation phone numbers and presents them  to help you find causes you\'re interested in.
-        \nThe charity information is sourced from <a href="https://api.likecharity.com/charities/">https://api.likecharity.com/charities/</a>.
+        \n\nThe charity information is sourced from <a href="https://api.likecharity.com/charities/">https://api.likecharity.com/charities/</a>.
          All donations are processed by <a href="https://www.likecharity.com">LikeCharity</a>, who have no association whatsoever with this app.
-        \nCurrently Alchemy is restricted to use in Ireland, but hopefully other APIs will be added soon.
+        \n\nCurrently Alchemy is restricted to use in Ireland.
     </string>
 
     <string name="disclaimer">Donations made through this app come out of your credit/bill.

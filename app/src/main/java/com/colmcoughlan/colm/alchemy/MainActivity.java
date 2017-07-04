@@ -91,7 +91,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        ImageAdapter imageAdapter = (ImageAdapter) gridView.getAdapter();
+        imageAdapter.getFilter().filter(query+":cat:"+category);
+
+        return true;
     }
 
     // connect search to imageadapter filter method

@@ -128,7 +128,7 @@ public class ImageAdapter extends BaseAdapter {
                     if(category.equals("All")){
                         matchesCategory = true;
                     }else{
-                        matchesCategory = (charity.getCategory().equals(category.toString()));
+                        matchesCategory = (charity.getCategory().toLowerCase().contains(category.toString().toLowerCase()));
                     }
 
                     if  (matchesConstraint && matchesCategory) {

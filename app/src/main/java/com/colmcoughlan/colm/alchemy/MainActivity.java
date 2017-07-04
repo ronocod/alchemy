@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 final List<String> keywords = charity.getKeys();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Choose a keyword");
+                builder.setTitle("Choose a keyword.");
                 builder.setItems( charity.getKeywords(keywords) , new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 confirmDialog(charity, keywords.get(which));
@@ -273,6 +273,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private void confirmDialog(final Charity charity, final String keyword) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Donate "+charity.getCost(keyword)+" to "+charity.getName()+"?");
+        builder.setMessage(getString(R.string.likecharity_tcs));
         builder.setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 sendSms(charity.getNumber(), keyword);

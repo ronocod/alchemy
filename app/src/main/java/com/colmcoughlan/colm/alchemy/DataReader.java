@@ -15,7 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
+import javax.net.ssl.HttpsURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+
 
 /**
  * Created by colm on 28/04/17.
@@ -43,12 +45,12 @@ public class DataReader extends AsyncTask<String, List<Charity>, List<Charity>> 
         List<String> categories = new ArrayList<String>();
 
         BufferedReader reader = null;
-        HttpURLConnection urlConnection = null;
+        HttpsURLConnection urlConnection = null;
         List<Charity> charityList = new ArrayList<Charity>();
 
         try {
             URL url = new URL(urlString[0]);
-            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection = (HttpsURLConnection) url.openConnection();
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             reader = new BufferedReader(new InputStreamReader(in));

@@ -17,13 +17,16 @@ public class Charity {
     private String description;
 
     private Map<String,String> keywords = new HashMap<>();
+    private Map<String,String> freqs = new HashMap<>();
 
-    public Charity(String name, String category, String description, String logo_url, String number, Map<String,String> keywords) {
+
+    public Charity(String name, String category, String description, String logo_url, String number, Map<String,String> keywords, Map<String,String> freqs) {
         this.name = name;
         this.category = category;
         this.logo_url = logo_url;
         this.number = number;
         this.keywords = keywords;
+        this.freqs = freqs;
         this.description = description;
     }
 

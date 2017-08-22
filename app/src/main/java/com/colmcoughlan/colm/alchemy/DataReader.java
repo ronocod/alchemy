@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import java.util.zip.GZIPInputStream;
 
 
 /**
@@ -51,8 +51,15 @@ public class DataReader extends AsyncTask<String, List<Charity>, List<Charity>> 
         try {
             URL url = new URL(urlString[0]);
             urlConnection = (HttpsURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Accept-Encoding", "gzip"); // ask for json to be compressed
 
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            InputStream in = null;
+            if ("gzip".equals(urlConnection.getContentEncoding())) { // support compression if present
+                in = new BufferedInputStream(new GZIPInputStream(urlConnection.getInputStream()));
+            }
+            else{
+                in = new BufferedInputStream(urlConnection.getInputStream());
+            }
             reader = new BufferedReader(new InputStreamReader(in));
             StringBuffer buffer = new StringBuffer();
             String line = "";
@@ -86,14 +93,23 @@ public class DataReader extends AsyncTask<String, List<Charity>, List<Charity>> 
 
 
                     Map<String,String> donation_keys_strings = new HashMap<String, String>();
-                    JSONObject donation_list = new JSONObject(((JSONObject) charities.get(key)).getString("donation_options"));
+                    Map<String,String> frequency_keys_strings = new HashMap<String, String>();
+
+                    JSONObject donation_list = new JSONObject(((JSONObject) charities.get(key)).getString("donation_options")); // get the donation options
                     Iterator<?> donation_keys = donation_list.keys();
                     while( donation_keys.hasNext() ) {
                         String donation_key = (String)donation_keys.next(); // donation keys and values
                         donation_keys_strings.put(donation_key, donation_list.getString(donation_key));
                     }
 
-                    Charity newCharity = new Charity(key, category, description, link, number, donation_keys_strings);
+                    JSONObject freq_list = new JSONObject(((JSONObject) charities.get(key)).getString("freq")); // get the frequencies
+                    Iterator<?> freq_keys = freq_list.keys();
+                    while( freq_keys.hasNext() ) {
+                        String freq_key = (String)freq_keys.next(); // donation keys and values
+                        frequency_keys_strings.put(freq_key, freq_list.getString(freq_key));
+                    }
+
+                    Charity newCharity = new Charity(key, category, description, link, number, donation_keys_strings, frequency_keys_strings);
 
                     charityList.add(newCharity);
                 }

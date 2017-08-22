@@ -23,8 +23,9 @@
     <string name="confirm_yes">Yes</string>
     <string name="confirm_cancel">Cancel</string>
 
-    <string name="likecharity_tcs">"Texts cost €2, €4 or €6. Charities receive a minimum of €1.63 of €2, €3.25 of €4 and €4.88 of €6. Service Provider: LIKECHARITY. Helpline: 0766805278"</string>
+    <string name="likecharity_tcs">"Texts cost €2, €4 or €6. Charities receive a minimum of €1.63 of €2, €3.25 of €4 and €4.88 of €6. Service Provider: LIKECHARITY. Helpline: 0766805278. If you chose a weekly or monthly donation you can cancel it by texting STOP to 50300."</string>
     <string name="toast_confirmation">Donation sent. A confirmation SMS should arrive shortly.</string>
+    <string name="toast_recurring_confirmation">Setting up recurring donation. An SMS will arrive shortly requesting confirmation and providing further information.</string>
 
     <string name="server_url">"https://colmcoughlan.com/gci"</string>
     <string name="pref_previously_started">notFirstRun</string>

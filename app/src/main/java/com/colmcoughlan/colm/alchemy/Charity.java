@@ -48,6 +48,10 @@ public class Charity {
         return keys;
     }
 
+    public Map<String,String> getFreqs(){
+        return freqs;
+    }
+
     public String getCost(String key) {
         return keywords.get(key);
     }
@@ -57,7 +61,7 @@ public class Charity {
         List<String> keys_values = new ArrayList<String>();
 
         for(int i = 0; i< keys.size();i++){
-            keys_values.add(keys.get(i) + " - " + keywords.get(keys.get(i)));
+            keys_values.add(getKeywordDescription(freqs.get(keys.get(i))) + ": " + keys.get(i) + " - " + keywords.get(keys.get(i)));
         }
 
         return keys_values.toArray(new CharSequence[keys_values.size()]);
@@ -69,6 +73,21 @@ public class Charity {
 
     public String getNumber(){
         return this.number;
+    }
+
+    // get keyword text
+
+    private String getKeywordDescription(String freq){
+        if(freq.equals("once")){
+            return "One time donation";
+        } else if (freq.equals("week")){
+            return "Weekly donation";
+        } else if (freq.equals("month")){
+            return "Monthly donation";
+        }
+        else{
+            return "Error! Please report this if you see it.";
+        }
     }
 
 }

@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -182,12 +183,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     int position, long id) {
                 final Charity charity = (Charity) gridView.getItemAtPosition(position);
                 final List<String> keywords = charity.getKeys();
+                final Map<String,String> freqs = charity.getFreqs();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Choose a keyword.");
                 builder.setItems( charity.getKeywords(keywords) , new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                confirmDialog(charity, keywords.get(which));
+                                confirmDialog(charity, keywords.get(which), freqs.get(keywords.get(which)));
                             }
                         });
                 builder.create().show();
@@ -273,9 +275,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     // check with the user if they want to confirm a donation
 
-    private void confirmDialog(final Charity charity, final String keyword) {
+    private void confirmDialog(final Charity charity, final String keyword, final String freq) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Donate "+charity.getCost(keyword)+" to "+charity.getName()+"?");
+        String msg = "";
+        int toastText = R.string.toast_confirmation;
+        if(freq.equals("once")){
+            msg = "Donate ";
+        } else if (freq.equals("week")){
+            msg = "Set up a weekly donation of ";
+            toastText = R.string.toast_recurring_confirmation;
+        } else if (freq.equals("month")){
+            msg = "Set up a monthly donation of ";
+            toastText = R.string.toast_recurring_confirmation;
+        }
+        else{
+            msg = "ERROR! Please report this and try a different donation option.";
+        }
+
+        builder.setTitle(msg+charity.getCost(keyword)+" to "+charity.getName()+"?");
         builder.setMessage(getString(R.string.likecharity_tcs));
         builder.setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

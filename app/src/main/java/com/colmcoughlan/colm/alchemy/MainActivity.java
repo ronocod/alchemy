@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, 0);
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS}, 0);
             }
         });
         AlertDialog dialog = builder.create();
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         switch (requestCode) {
             case 0: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Warning: This app needs SMS permissions!");

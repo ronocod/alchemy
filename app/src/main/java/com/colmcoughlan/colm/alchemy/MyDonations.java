@@ -66,14 +66,19 @@ public class MyDonations extends AppCompatActivity {
                         String msgData = cursor.getString(idx);
 
                         if(msgData.startsWith("Thank you")){
-                            String charity_name = (msgData.split(" donation to ")[1]).split("\\.")[0];
-                            Integer donation_amount = Integer.parseInt(msgData.split(" for your ")[1].split(" Euro")[0]);
-                            //Log.d("charity_name", charity_name);
-                            //Log.d("donation_amount", donation_amount.toString());
-                            if(donations.containsKey(charity_name)){
-                                donations.put(charity_name, donations.get(charity_name) + donation_amount);
-                            } else {
-                                donations.put(charity_name, donation_amount);
+                            try {
+                                String charity_name = (msgData.split(" to ")[1]).split("\\.")[0];
+                                String[] amountString = msgData.split(" Euro")[0].split(" ");
+                                Integer donation_amount = Integer.parseInt(amountString[amountString.length - 1]);
+                                //Log.d("charity_name", charity_name);
+                                //Log.d("donation_amount", donation_amount.toString());
+                                if (donations.containsKey(charity_name)) {
+                                    donations.put(charity_name, donations.get(charity_name) + donation_amount);
+                                } else {
+                                    donations.put(charity_name, donation_amount);
+                                }
+                            } catch (IndexOutOfBoundsException e) {
+                                donations.put("Error!", 1);
                             }
                         }
                     }

@@ -19,6 +19,7 @@
 
     <string name="search_title">Search</string>
     <string name="my_donations_title">My Donations</string>
+    <string name="total_donations">Total Donations</string>
     <string name="about_title">About</string>
 
     <string name="confirm_yes">Yes</string>

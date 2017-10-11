@@ -57,8 +57,11 @@ public class MyDonations extends AppCompatActivity {
 
         Map<String,Integer> donations = new HashMap<String, Integer>();
 
+        Integer totalDonations = 0;
+
         if (cursor.moveToFirst()) { // must check the result to prevent exception
             do {
+
                 //Log.d("New message", "msg");
                 for(int idx=0;idx<cursor.getColumnCount();idx++)
                 {
@@ -72,6 +75,7 @@ public class MyDonations extends AppCompatActivity {
                                 Integer donation_amount = Integer.parseInt(amountString[amountString.length - 1]);
                                 //Log.d("charity_name", charity_name);
                                 //Log.d("donation_amount", donation_amount.toString());
+                                totalDonations = totalDonations + donation_amount;
                                 if (donations.containsKey(charity_name)) {
                                     donations.put(charity_name, donations.get(charity_name) + donation_amount);
                                 } else {
@@ -86,9 +90,7 @@ public class MyDonations extends AppCompatActivity {
             } while (cursor.moveToNext());
         }
 
-        if (donations.size() == 0){
-            donations.put("No donations yet",0);
-        }
+        donations.put(getString(R.string.total_donations), totalDonations);
 
         return donations;
     }

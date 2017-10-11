@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,12 +22,28 @@ import java.util.Map;
 public class DonationsAdapter extends BaseAdapter {
     private Context mContext;
     private Map<String, Integer> donations;
-    private List<String> charties;
+    private List<String> charities;
+
+    private static <K, V extends Comparable<? super V>> ArrayList<K>
+    sortKeysByValue(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>(map.entrySet());
+        Collections.sort( list, new Comparator<Map.Entry<K, V>>() {
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                return (o2.getValue()).compareTo( o1.getValue() );
+            }
+        });
+
+        ArrayList<K> result = new ArrayList<K>();
+        for (Map.Entry<K, V> entry : list) {
+            result.add(entry.getKey());
+        }
+        return result;
+    }
 
     public DonationsAdapter(Context c, Map<String, Integer> donations) {
         mContext = c;
         this.donations = donations;
-        this.charties = new ArrayList<String>(donations.keySet());
+        this.charities = sortKeysByValue(donations);
     }
 
     public int getCount() {
@@ -32,7 +51,7 @@ public class DonationsAdapter extends BaseAdapter {
     }
 
     public String getItem(int position) {
-        return this.charties.get(position);
+        return this.charities.get(position);
     }
 
     public long getItemId(int position) {
@@ -54,7 +73,7 @@ public class DonationsAdapter extends BaseAdapter {
             textView = (TextView) convertView.getTag();
         }
 
-        String charityName = this.charties.get(position);
+        String charityName = this.charities.get(position);
         textView.setText(charityName + ": €" + donations.get(charityName).toString());
 
         return convertView;

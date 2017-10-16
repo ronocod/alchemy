@@ -9,6 +9,11 @@
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
 
+    <item android:id="@+id/my_donations"
+        android:title="@string/my_donations_title"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.widget.TextView" />
+
     <item android:id="@+id/about"
         android:title="@string/about_title"
         app:showAsAction="collapseActionView|ifRoom"

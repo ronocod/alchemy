@@ -3,7 +3,9 @@
     package="com.colmcoughlan.colm.alchemy">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/alchemy_white"
@@ -11,11 +13,10 @@
         android:roundIcon="@drawable/alchemy_white"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
-
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
@@ -23,6 +24,13 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MyDonations"
+            android:label="@string/title_activity_my_donations">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
     </application>

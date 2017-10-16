@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -24,12 +23,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.util.Log;
 import android.telephony.SmsManager;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -79,12 +76,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.my_donations:
+                Intent donations = new Intent(this, MyDonations.class);
+                startActivity(donations);
+                break;
             case R.id.about:
                 Intent i = new Intent(this, SettingsActivity.class);
                 startActivity(i);
-            default:
-                return super.onOptionsItemSelected(item);
+                break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -173,6 +174,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             if (ContextCompat.checkSelfPermission(this,Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 0);
             }
+
+            if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, 0);
+            }
         }
 
         // set up click listener for selection of charities
@@ -235,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS}, 0);
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS}, 0);
             }
         });
         AlertDialog dialog = builder.create();
@@ -250,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         switch (requestCode) {
             case 0: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Warning: This app needs SMS permissions!");

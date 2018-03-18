@@ -129,44 +129,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        // create the category spinner
-
-
-        Spinner spinner = (Spinner) findViewById(R.id.category_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.categories_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-
-        spinner.setSelection(0, false); // need this to stop OnItemSelectedListener being called at start
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                              @Override
-                                              public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                category = (String) parent.getItemAtPosition(position);
-                                                if(gridView != null){
-                                                    ImageAdapter imageAdapter = (ImageAdapter) gridView.getAdapter();
-                                                    imageAdapter.getFilter().filter(""+":cat:"+category);
-                                                }
-                                              }
-
-                                              @Override
-                                              public void onNothingSelected(AdapterView<?> parent) {
-                                                category = "All";
-                                              }
-                                          }
-        );
-
-
-        // create the gridview and get the data
-
-        gridView = (GridView) findViewById(R.id.gridview);
-        DataReader dataReader = new DataReader(this, gridView);
-        dataReader.execute(getString(R.string.server_url));
-
         // if this is the first run, display an information box
 
         if(firstRun()){
@@ -182,6 +144,37 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, 0);
             }
         }
+
+
+        // create the gridview and get the data
+
+        gridView = (GridView) findViewById(R.id.gridview);
+        DataReader dataReader = new DataReader(this, gridView);
+        dataReader.execute(getString(R.string.server_url));
+
+        // create the category spinner
+
+        Spinner spinner = (Spinner) findViewById(R.id.category_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.categories_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // Specify the layout to use when the list of choices appears
+        spinner.setAdapter(adapter); // Apply the adapter to the spinner
+        spinner.setSelection(0, false); // need this to stop OnItemSelectedListener being called at start
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                              @Override
+                                              public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                  category = (String) parent.getItemAtPosition(position);
+                                                  if(gridView != null){
+                                                      ImageAdapter imageAdapter = (ImageAdapter) gridView.getAdapter();
+                                                      imageAdapter.getFilter().filter(""+":cat:"+category);
+                                                  }
+                                              }
+
+                                              @Override
+                                              public void onNothingSelected(AdapterView<?> parent) {
+                                                  category = "All";
+                                              }
+                                          }
+        );
 
         // set up click listener for selection of charities
 

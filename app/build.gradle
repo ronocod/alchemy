@@ -7,8 +7,8 @@ android {
         applicationId "com.colmcoughlan.colm.alchemy"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 16
-        versionName "1.1.2"
+        versionCode 19
+        versionName "1.1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

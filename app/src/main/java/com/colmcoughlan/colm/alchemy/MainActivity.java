@@ -165,7 +165,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                                   category = (String) parent.getItemAtPosition(position);
                                                   if(gridView != null){
                                                       ImageAdapter imageAdapter = (ImageAdapter) gridView.getAdapter();
-                                                      imageAdapter.getFilter().filter(""+":cat:"+category);
+                                                      if(imageAdapter != null){
+                                                          imageAdapter.getFilter().filter(""+":cat:"+category);
+                                                      }
                                                   }
                                               }
 

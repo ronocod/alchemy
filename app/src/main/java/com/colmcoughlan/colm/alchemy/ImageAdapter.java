@@ -63,7 +63,7 @@ public class ImageAdapter extends BaseAdapter {
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
-            Picasso.with(mContext).cancelRequest(holder.imageView);
+            Picasso.get().cancelRequest(holder.imageView);
         }
 
         if (position % 2 == 0){
@@ -76,10 +76,10 @@ public class ImageAdapter extends BaseAdapter {
         holder.textView.setText(filteredList.get(position).getName());
         String logo_url = filteredList.get(position).getLogoURL();
         try{
-            Picasso.with(mContext).load(logo_url).placeholder(R.drawable.alchemy).into(holder.imageView);
+            Picasso.get().load(logo_url).placeholder(R.drawable.alchemy).into(holder.imageView);
         }
         catch (Throwable e){
-            Picasso.with(mContext).load(R.drawable.alchemy).into(holder.imageView);
+            Picasso.get().load(R.drawable.alchemy).into(holder.imageView);
         }
 
         return convertView;

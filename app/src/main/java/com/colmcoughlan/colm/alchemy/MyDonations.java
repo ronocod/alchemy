@@ -3,14 +3,9 @@ package com.colmcoughlan.colm.alchemy;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.GridView;
 
 import java.util.HashMap;
@@ -37,7 +32,7 @@ public class MyDonations extends AppCompatActivity {
         setupActionBar();
         Map<String,Integer> donations = get_donations();
 
-        gridView = (GridView) findViewById(R.id.my_donations_gridview);
+        gridView = findViewById(R.id.my_donations_gridview);
         gridView.setAdapter(new DonationsAdapter(this, donations));
 
     }

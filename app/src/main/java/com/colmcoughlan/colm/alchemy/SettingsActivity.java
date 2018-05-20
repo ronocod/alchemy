@@ -1,13 +1,10 @@
 package com.colmcoughlan.colm.alchemy;
 
 
-
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.MenuItem;
-
-import java.util.List;
 
 public class SettingsActivity extends AppCompatPreferenceActivity {
 

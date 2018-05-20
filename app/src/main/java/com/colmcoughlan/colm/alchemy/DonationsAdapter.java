@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -66,8 +65,7 @@ public class DonationsAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.my_donations_layout, null);
-            textView = new TextView(mContext);
-            textView = (TextView) convertView.findViewById(R.id.my_donations_gridview_text);
+            textView = convertView.findViewById(R.id.my_donations_gridview_text);
             convertView.setTag(textView);
         } else {
             textView = (TextView) convertView.getTag();

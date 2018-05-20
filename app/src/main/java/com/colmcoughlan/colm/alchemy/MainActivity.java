@@ -9,21 +9,21 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.telephony.SmsManager;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -64,11 +64,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         this.menu = menu;
 
         return true;
-    };
+    }
 
     @Override
     public void onResume(){
-        invalidateOptionsMenu();;
+        invalidateOptionsMenu();
         super.onResume();
     }
 
@@ -148,13 +148,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         // create the gridview and get the data
 
-        gridView = (GridView) findViewById(R.id.gridview);
+        gridView = findViewById(R.id.gridview);
         DataReader dataReader = new DataReader(this, gridView);
         dataReader.execute(getString(R.string.server_url));
 
         // create the category spinner
 
-        Spinner spinner = (Spinner) findViewById(R.id.category_spinner);
+        Spinner spinner = findViewById(R.id.category_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.categories_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // Specify the layout to use when the list of choices appears
         spinner.setAdapter(adapter); // Apply the adapter to the spinner

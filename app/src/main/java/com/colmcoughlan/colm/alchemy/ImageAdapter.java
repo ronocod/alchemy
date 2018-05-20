@@ -58,8 +58,8 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.gridview_layout, null);
             holder = new ViewHolder();
-            holder.textView = (TextView) convertView.findViewById(R.id.gridview_text);
-            holder.imageView = (ImageView) convertView.findViewById(R.id.gridview_image);
+            holder.textView = convertView.findViewById(R.id.gridview_text);
+            holder.imageView = convertView.findViewById(R.id.gridview_image);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

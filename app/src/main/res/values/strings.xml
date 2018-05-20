@@ -23,15 +23,19 @@
     <string name="about_title">About</string>
 
     <string name="confirm_yes">Yes</string>
-    <string name="confirm_cancel">Cancel</string>
 
     <string name="likecharity_tcs">"Texts cost €2, €4 or €6. Charities receive a minimum of €1.63 of €2, €3.25 of €4 and €4.88 of €6. Service Provider: LIKECHARITY. Helpline: 0766805278. If you chose a weekly or monthly donation you can cancel it by texting STOP to 50300."</string>
     <string name="toast_confirmation">Donation sent. A confirmation SMS should arrive shortly.</string>
     <string name="toast_recurring_confirmation">Setting up recurring donation. An SMS will arrive shortly requesting confirmation and providing further information.</string>
+    <string name="permission_bug_error">Alchemy ran into an bug that some devices have.
+        To send the message, you will have to give Alchemy calling permissions.
+        It won\'t actually call anyone, it just needs permissions to work around the bug.</string>
+    <string name="phone_permission_confirmation">Calling permission granted, please try making a donation again.</string>
 
     <string name="server_url">"https://colmcoughlan.com/gci"</string>
     <string name="pref_previously_started">notFirstRun</string>
-    <string name="sms_text">Alchemy needs SMS permissons to donate to charities. As you have denied it SMS permissions, Alchemy will now close - if you open it again you can change your mind.</string>
+    <string name="sms_text">Alchemy needs SMS permissions to donate to charities. As you have denied it SMS permissions, Alchemy will now close - if you open it again you can change your mind.</string>
+    <string name="phone_permission_refused">Alchemy needs calling permissions on this device to donate to charities. As you have denied it these permissions, Alchemy will now close - if you open it again you can change your mind.</string>
     <string name="welcome_text">
         Welcome to Alchemy, an app which will help you discover and donate to charities in Ireland.
         \n\nTap a charity to see the donation options, and tap again to make a donation via text using your phone credit. You will get a message from the donation handling company confirming your donation was successful.

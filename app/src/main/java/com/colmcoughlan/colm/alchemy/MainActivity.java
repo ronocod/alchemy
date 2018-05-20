@@ -1,6 +1,5 @@
 package com.colmcoughlan.colm.alchemy;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.SearchManager;
@@ -9,26 +8,33 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.telephony.SmsManager;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.READ_SMS;
+import static android.Manifest.permission.SEND_SMS;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -43,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     // this is actually the same as on create, but called after resume to make sure menu is ok
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu){
+    public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
 
         MenuInflater inflater = getMenuInflater();
@@ -64,11 +70,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         this.menu = menu;
 
         return true;
-    };
+    }
 
     @Override
-    public void onResume(){
-        invalidateOptionsMenu();;
+    public void onResume() {
+        invalidateOptionsMenu();
         super.onResume();
     }
 
@@ -97,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public boolean onQueryTextSubmit(String query) {
         ImageAdapter imageAdapter = (ImageAdapter) gridView.getAdapter();
-        imageAdapter.getFilter().filter(query+":cat:"+category);
+        imageAdapter.getFilter().filter(query + ":cat:" + category);
 
         return true;
     }
@@ -109,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
         ImageAdapter imageAdapter = (ImageAdapter) gridView.getAdapter();
-        imageAdapter.getFilter().filter(newText+":cat:"+category);
+        imageAdapter.getFilter().filter(newText + ":cat:" + category);
 
         // use to enable search view popup text
 //        if (TextUtils.isEmpty(newText)) {
@@ -131,30 +137,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         // if this is the first run, display an information box
 
-        if(firstRun()){
+        if (firstRun()) {
             showHelp(this);
-        }
-        else{
+        } else {
             // whether it's first run or not, we need SMS permissions (not granted by default)
-            if (ContextCompat.checkSelfPermission(this,Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 0);
-            }
-
-            if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, 0);
-            }
+            requestPermissionIfNotGranted(SEND_SMS);
+            requestPermissionIfNotGranted(READ_SMS);
         }
 
 
         // create the gridview and get the data
 
-        gridView = (GridView) findViewById(R.id.gridview);
+        gridView = findViewById(R.id.gridview);
         DataReader dataReader = new DataReader(this, gridView);
         dataReader.execute(getString(R.string.server_url));
 
         // create the category spinner
 
-        Spinner spinner = (Spinner) findViewById(R.id.category_spinner);
+        Spinner spinner = findViewById(R.id.category_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.categories_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // Specify the layout to use when the list of choices appears
         spinner.setAdapter(adapter); // Apply the adapter to the spinner
@@ -163,10 +163,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                               @Override
                                               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                                   category = (String) parent.getItemAtPosition(position);
-                                                  if(gridView != null){
+                                                  if (gridView != null) {
                                                       ImageAdapter imageAdapter = (ImageAdapter) gridView.getAdapter();
-                                                      if(imageAdapter != null){
-                                                          imageAdapter.getFilter().filter(""+":cat:"+category);
+                                                      if (imageAdapter != null) {
+                                                          imageAdapter.getFilter().filter("" + ":cat:" + category);
                                                       }
                                                   }
                                               }
@@ -186,15 +186,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     int position, long id) {
                 final Charity charity = (Charity) gridView.getItemAtPosition(position);
                 final List<String> keywords = charity.getKeys();
-                final Map<String,String> freqs = charity.getFreqs();
+                final Map<String, String> freqs = charity.getFreqs();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Choose a keyword.");
-                builder.setItems( charity.getKeywords(keywords) , new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                confirmDialog(charity, keywords.get(which), freqs.get(keywords.get(which)));
-                            }
-                        });
+                builder.setItems(charity.getKeywords(keywords), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        confirmDialog(charity, keywords.get(which), freqs.get(keywords.get(which)));
+                    }
+                });
                 builder.create().show();
             }
         });
@@ -213,20 +213,20 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     // is this the first run?
 
-    private boolean firstRun(){
+    private boolean firstRun() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
-        if(!previouslyStarted) {
+        if (!previouslyStarted) {
             SharedPreferences.Editor edit = prefs.edit();
             edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
             edit.commit();
         }
-        return  !previouslyStarted;
+        return !previouslyStarted;
     }
 
     // show help if needed
 
-    private void showHelp(final Activity activity){
+    private void showHelp(final Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Welcome!");
         builder.setMessage(R.string.welcome_text);
@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS}, 0);
+                ActivityCompat.requestPermissions(activity, new String[]{SEND_SMS, READ_SMS}, 0);
             }
         });
         AlertDialog dialog = builder.create();
@@ -249,64 +249,68 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length == 0) {
+            return;
+        }
         switch (requestCode) {
             case 0: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Warning: This app needs SMS permissions!");
-                    builder.setMessage(R.string.sms_text);
-                    builder.setPositiveButton(R.string.welcome_dismiss, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            mainActivity.finish();
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                if (Arrays.asList(permissions).contains(READ_PHONE_STATE)) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(this, R.string.phone_permission_confirmation, Toast.LENGTH_SHORT).show();
+                    } else {
+                        showPermissionDeniedDialog("Warning: This app needs calling permissions!", R.string.phone_permission_refused);
+                    }
+                } else if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    showPermissionDeniedDialog("Warning: This app needs SMS permissions!", R.string.sms_text);
                 }
             }
         }
+    }
+
+    private void showPermissionDeniedDialog(String title, @StringRes int message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(R.string.welcome_dismiss, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mainActivity.finish();
+            }
+        });
+        builder.show();
     }
 
     // check with the user if they want to confirm a donation
 
     private void confirmDialog(final Charity charity, final String keyword, final String freq) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        String msg = "";
-        int toastText = R.string.toast_confirmation;
-        if(freq.equals("once")){
+        String msg;
+        if (freq.equals("once")) {
             msg = "Donate ";
-        } else if (freq.equals("week")){
+        } else if (freq.equals("week")) {
             msg = "Set up a weekly donation of ";
-            toastText = R.string.toast_recurring_confirmation;
-        } else if (freq.equals("month")){
+        } else if (freq.equals("month")) {
             msg = "Set up a monthly donation of ";
-            toastText = R.string.toast_recurring_confirmation;
-        }
-        else{
+        } else {
             msg = "ERROR! Please report this and try a different donation option.";
         }
 
-        builder.setTitle(msg+charity.getCost(keyword)+" to "+charity.getName()+"?");
+        builder.setTitle(msg + charity.getCost(keyword) + " to " + charity.getName() + "?");
         builder.setMessage(getString(R.string.likecharity_tcs));
         builder.setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 sendSms(charity.getNumber(), keyword);
                 dialog.dismiss();
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(getApplicationContext(), R.string.toast_confirmation, duration);
-                toast.show();
             }
         });
-        builder.setNegativeButton(R.string.confirm_cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
             }
@@ -318,8 +322,39 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     // actually send the text
 
-    private void sendSms(String phoneNumber, String message){
-        SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(phoneNumber, null, message, null, null);
+    private void sendSms(String phoneNumber, String message) {
+        SmsManager smsManager = SmsManager.getDefault();
+        try {
+            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+            Toast.makeText(this, R.string.toast_confirmation, Toast.LENGTH_SHORT).show();
+        } catch (SecurityException e) {
+            // some devices need the READ_PHONE_STATE permission to send messages: https://stackoverflow.com/a/49415928
+            if (e.getMessage().contains("READ_PHONE_STATE")) {
+                showBugExplanationDialog();
+            }
+        }
+    }
+
+    private void showBugExplanationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("")
+                .setMessage(R.string.permission_bug_error)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        requestPermissionIfNotGranted(READ_PHONE_STATE);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void requestPermissionIfNotGranted(String permission) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, 0);
+        }
     }
 }
